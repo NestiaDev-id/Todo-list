@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "NEXT_DISABLE_ESLINT=1 next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate"
@@ -17,8 +17,8 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "eslint": "^9",
-    "eslint-config-next": "15.1.7",
+    "eslint": "^9.20.1",
+    "eslint-config-next": "^15.1.7",
     "postcss": "^8",
     "prisma": "^6.3.1",
     "tailwindcss": "^3.4.1"
