@@ -21,17 +21,15 @@ export default function AdminPage() {
   // Tambah atau Edit Tugas
   const addTask = async () => {
     if (newTask.trim() === "") return;
-    if (editId) {
-      await fetch("/api/todos", {
-        method: "PUT",
-        body: JSON.stringify({ id: editId, text: newTask }),
-      });
-    } else {
-      await fetch("/api/todos", {
-        method: "POST",
-        body: JSON.stringify({ text: newTask }),
-      });
-    }
+    const method = editId ? "PUT" : "POST";
+    const payload = editId ? { id: editId, title: newTask } : { title: newTask };
+
+    await fetch("/api/todos", {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
     setNewTask("");
     setEditId(null);
     fetchTodos();
@@ -41,15 +39,26 @@ export default function AdminPage() {
   const removeTask = async (id) => {
     await fetch("/api/todos", {
       method: "DELETE",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),
     });
     fetchTodos();
   };
 
   // Edit Tugas
-  const editTask = (id, text) => {
-    setNewTask(text);
+  const editTask = (id, title) => {
+    setNewTask(title);
     setEditId(id);
+  };
+
+  // Toggle Selesai/Tidak
+  const toggleComplete = async (id, isCompleted) => {
+    await fetch("/api/todos", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, isCompleted: !isCompleted }),
+    });
+    fetchTodos();
   };
 
   return (
@@ -66,7 +75,7 @@ export default function AdminPage() {
           onChange={(e) => setNewTask(e.target.value)}
           className="border border-gray-300 px-3 py-2 rounded-md shadow-sm w-full"
         />
-        <button 
+        <button
           onClick={addTask}
           className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
         >
@@ -75,11 +84,12 @@ export default function AdminPage() {
       </div>
 
       {/* List Tugas */}
-      <TodoList 
-        todos={todos.map(todo => todo.text)}
+      <TodoList
+        todos={todos}
         isAdmin={true}
         onDelete={(index) => removeTask(todos[index].id)}
-        onEdit={(index) => editTask(todos[index].id, todos[index].text)}
+        onEdit={(index) => editTask(todos[index].id, todos[index].title)}
+        onToggleComplete={(index) => toggleComplete(todos[index].id, todos[index].isCompleted)}
       />
     </div>
   );
