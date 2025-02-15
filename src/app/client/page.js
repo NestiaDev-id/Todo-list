@@ -17,7 +17,7 @@ export default function ClientPage() {
 
   return (
     <div className="w-screen py-20 flex flex-col items-center">
-      <h1 className="text-4xl font-bold uppercase">Client Page</h1>
+      <h1 className="text-4xl font-bold uppercase">Client</h1>
       <p className="mt-2 text-gray-600">Daftar tugas hanya bisa dibaca.</p>
 
       {todos.length === 0 ? (
